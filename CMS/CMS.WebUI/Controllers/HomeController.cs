@@ -9,9 +9,9 @@ namespace CMS.WebUI.Controllers
     public class HomeController : Controller
     {
         // GET: Home
-        public string Index()
+        public ActionResult Index()
         {
-            return "My First MVC APP";
+            return View();
         }
     }
 }
