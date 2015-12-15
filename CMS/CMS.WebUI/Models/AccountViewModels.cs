@@ -46,9 +46,8 @@ namespace CMS.WebUI.Models
         [Display(Name = "用户名[*]")]
         public string UserName { get; set; }
 
-        [Required]
         [EmailAddress]
-        [Display(Name = "电子邮件[*]")]
+        [Display(Name = "电子邮件")]
         public string Email { get; set; }
 
         [Required]
