@@ -55,5 +55,7 @@ namespace CMS.WebUI.Models
         {
             return new ApplicationDbContext();
         }
+
+        //public System.Data.Entity.DbSet<CMS.WebUI.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }
