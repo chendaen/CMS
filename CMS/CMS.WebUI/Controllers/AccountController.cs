@@ -126,8 +126,6 @@ namespace CMS.WebUI.Controllers
                 {
                     user.Email = model.Email;
                 }
-                else
-                    user.Email = "user@CMS";
                 if (!string.IsNullOrEmpty(model.UserState.ToString()))
                 {
                     user.UserState = model.UserState;
