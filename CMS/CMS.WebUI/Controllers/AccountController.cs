@@ -104,11 +104,11 @@ namespace CMS.WebUI.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register([Bind(Exclude ="age")] RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.UserName };
 
                 if (!string.IsNullOrEmpty(model.Address))
                 {
@@ -118,10 +118,16 @@ namespace CMS.WebUI.Controllers
                 {
                     user.Age = model.Age;
                 }
-                if (!string.IsNullOrEmpty(model.City.ToString()))
+                if (!string.IsNullOrEmpty(model.City))
                 {
                     user.City = model.City;
                 }
+                if (!string.IsNullOrEmpty(model.Email))
+                {
+                    user.Email = model.Email;
+                }
+                else
+                    user.Email = "user@CMS";
                 if (!string.IsNullOrEmpty(model.UserState.ToString()))
                 {
                     user.UserState = model.UserState;
