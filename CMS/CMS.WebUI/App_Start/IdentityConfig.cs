@@ -45,7 +45,8 @@ namespace CMS.WebUI
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                //取消电子邮箱合法检查
+                RequireUniqueEmail = false
             };
 
             // 配置密码的验证逻辑
