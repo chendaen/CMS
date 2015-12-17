@@ -205,6 +205,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
+    <Compile Include="Migrations\201512160756536_Initial.cs" />
+    <Compile Include="Migrations\201512160756536_Initial.Designer.cs">
+      <DependentUpon>201512160756536_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -231,6 +236,8 @@
     <Content Include="Views\Manage\UserEdit.cshtml" />
     <Content Include="Views\Manage\UserCreate.cshtml" />
     <Content Include="Views\Manage\ResetPassword.cshtml" />
+    <Content Include="Views\Manage\UserDelete.cshtml" />
+    <Content Include="Views\Manage\UserSuspend.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -246,6 +253,11 @@
       <Project>{1c4f112f-6cb4-4a15-a03d-def1d9e24df6}</Project>
       <Name>CMS.Domain</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201512160756536_Initial.resx">
+      <DependentUpon>201512160756536_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

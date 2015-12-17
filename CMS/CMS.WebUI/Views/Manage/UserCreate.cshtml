@@ -8,12 +8,12 @@
     ViewBag.Title = "创建用户";
 }
 
-<h2>@ViewBag.Title。</h2>
+<h2>创建用户</h2>
 
 @using (Html.BeginForm("UserCreate", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <h4>创建新帐户。</h4>
+    <h4>用户信息</h4>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
     <div class="form-group">
@@ -64,6 +64,10 @@
         </div>
     </div>
 }
+
+<div>
+    @Html.ActionLink("返回到用户列表", "UserList")
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

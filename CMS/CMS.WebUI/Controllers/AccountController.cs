@@ -72,6 +72,13 @@ namespace CMS.WebUI.Controllers
             {
                 return View(model);
             }
+            
+            //判断用户状态是否启用，注意是通过用户名检索的，重名用户应该不能注册
+            if (!UserIsUsed(model.UserName))
+            {
+                ModelState.AddModelError("", "用户处于冻结状态，请联系管理员。");
+                return View(model);
+            }
 
             // 这不会计入到为执行帐户锁定而统计的登录失败次数中
             // 若要在多次输入错误密码的情况下触发帐户锁定，请更改为 shouldLockout: true
@@ -79,7 +86,9 @@ namespace CMS.WebUI.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    {                        
+                        return RedirectToLocal(returnUrl);
+                    }                    
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -104,7 +113,7 @@ namespace CMS.WebUI.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register([Bind(Exclude ="age")] RegisterViewModel model)
+        public async Task<ActionResult> Register([Bind(Exclude ="age,Email")] RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -126,8 +135,8 @@ namespace CMS.WebUI.Controllers
                 {
                     user.Email = model.Email;
                 }
-                else
-                    user.Email = "user@CMS";
+                //else
+                //    user.Email = "user@CMS";
                 if (!string.IsNullOrEmpty(model.UserState.ToString()))
                 {
                     user.UserState = model.UserState;
@@ -193,7 +202,23 @@ namespace CMS.WebUI.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
+        private bool UserIsUsed(string userName)
+        {
+            foreach(var user in UserManager.Users)
+            {
+                if(user.UserName==userName)
+                {
+                    switch (user.UserState)
+                    {
+                        case 1:
+                            return true;
+                        case 0:
+                            return false;
+                    }
+                }
+            }
+            return false;
+        }
 
         #endregion
 

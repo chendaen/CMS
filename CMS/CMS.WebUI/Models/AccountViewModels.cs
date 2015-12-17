@@ -61,4 +61,14 @@ namespace CMS.WebUI.Models
         [Compare("Password", ErrorMessage = "密码和确认密码不匹配。")]
         public string ConfirmPassword { get; set; }
     }
+
+    public class UserStates
+    {
+        [Required]
+        public int ID { get; set; }
+        [Required]
+        public int StateID { get; set; }
+        [Required]
+        public string StateName { get; set; }
+    }
 }

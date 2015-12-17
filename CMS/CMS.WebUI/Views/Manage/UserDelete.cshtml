@@ -1,0 +1,43 @@
+﻿@model CMS.WebUI.Models.ApplicationUser
+
+@{
+    Layout = "~/Views/Shared/_LayoutUserManage.cshtml";
+}
+
+@{
+    ViewBag.Title = "DeleteUser";
+}
+
+<h2>删除用户</h2>
+
+@using (Html.BeginForm("UserDelete", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <h4>用户信息</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">        
+        <div class="col-md-10">            
+            @Html.Label("用户名",  new { @class = "col-md-2 control-label" } )
+            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @readOnly = "true" ,@class="form-control"} })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="确认删除" class="btn btn-default" />
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("返回到用户列表", "UserList")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

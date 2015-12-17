@@ -8,7 +8,7 @@
     ViewBag.Title = "UserList";
 }
 
-<h2>UserList</h2>
+<h2>用户列表</h2>
 
 <p>
     @Html.ActionLink("创建用户", "UserCreate")
@@ -114,7 +114,8 @@
             <td>
                 @Html.ActionLink("编辑", "UserEdit", new { UserName = item.UserName }) |
                 @Html.ActionLink("重置密码", "ResetPassword", new { ID = item.Id }) |
-                @Html.ActionLink("删除", "UserDelete", new { id = item.Id })
+                @Html.ActionLink("用户状态", "UserSuspend", new { ID = item.Id }) |
+                @Html.ActionLink("删除", "UserDelete", new { ID = item.Id })
             </td>
         </tr>
     }

@@ -157,8 +157,14 @@ namespace CMS.WebUI.Controllers
 
         public ActionResult UserEdit(string UserName)
         {
+            if(!string.IsNullOrEmpty(UserName))
+            { 
             var user = UserManager.FindByName(UserName);
             return View(user);
+            }else
+            {
+                return RedirectToAction("UserList", new { Message = ManageMessageId.UpdateUserInfo });
+            }
         }
 
         [HttpPost]
@@ -244,12 +250,18 @@ namespace CMS.WebUI.Controllers
 
         public ActionResult ResetPassword(string ID)
         {
-            var user = UserManager.FindById(ID);
-            ResetPasswordViewModel re = new ResetPasswordViewModel();
-            re.ID = user.Id;
-            re.NewPassword = "";
-            re.ConfirmPassword = "";
-            return View(re);
+            if (!string.IsNullOrEmpty(ID))
+            {
+                var user = UserManager.FindById(ID);
+                ResetPasswordViewModel re = new ResetPasswordViewModel();
+                re.ID = user.Id;
+                re.NewPassword = "";
+                re.ConfirmPassword = "";
+                return View(re);
+            }else
+            {
+                return RedirectToAction("UserList", new { Message = ManageMessageId.ResetPassword });
+            }
         }
         
         [HttpPost]
@@ -277,9 +289,92 @@ namespace CMS.WebUI.Controllers
             return View(model);
         }
 
+        public ActionResult UserDelete(string ID)
+        {
+            if (!string.IsNullOrEmpty(ID))
+            {
+                var user = UserManager.FindById(ID);
+                return View(user);
+            }else
+            {
+                return RedirectToAction("UserList", new { Message = ManageMessageId.DeleteUserInfo });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UserDelete(ApplicationUser model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model != null)
+                {
+                    var user = UserManager.FindById(model.Id);
+                    var result = UserManager.Delete(user);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("UserList", new { Message = ManageMessageId.DeleteUserInfo });
+                    }                    
+                }
+            }
+            
+            // 如果我们进行到这一步时某个地方出错，则重新显示表单
+            return View(model);
+        }
+
+        public ActionResult UserSuspend(string ID)
+        {
+            if (!string.IsNullOrEmpty(ID))
+            {
+                ApplicationDbContext db = new ApplicationDbContext();
+
+                var usermodel = UserManager.FindById(ID);
+                ViewBag.UserStates = new SelectList(db.DbUserStates, "StateID", "StateName", usermodel.UserState);
+
+                return View(usermodel);
+            }else
+            {
+                return RedirectToAction("UserList", new { Message = ManageMessageId.SuspendUserInfo });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UserSuspend(ApplicationUser model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model != null)
+                {
+                    //重置密码
+                    //string token = UserManager.GeneratePasswordResetToken(model.Id);
+                    //UserManager.ResetPassword(model.Id, token, "Allegion@123");
+
+                    //判断需要修改的字段
+                    if (TryUpdateModel(model, new string[] { "UserState"}))
+                    {
+                        //UserManage里已经存了ApplicationUser实例(UserList方法) 这里再Update另一个实例会有问题，需要赋值给里边，再Update里边的实例。----个人理解
+                        var usermodel = UserManager.FindById(model.Id);
+                        usermodel.UserState = model.UserState;
+                        
+                        //Update
+                        var result = UserManager.Update(usermodel);
+                        if (result.Succeeded)
+                        {
+                            return RedirectToAction("UserList", new { Message = ManageMessageId.SuspendUserInfo });
+                        }
+                    }
+                }
+            }
+
+            // 如果我们进行到这一步时某个地方出错，则重新显示表单
+            return View(model);
+        }
+
         #endregion
 
         #region 帮助程序
+               
 
         private void AddErrors(IdentityResult result)
         {
@@ -320,7 +415,9 @@ namespace CMS.WebUI.Controllers
                 /// </summary>
             UpdateUserInfo,
             CreateUserInfo,
-            ResetPassword
+            ResetPassword,
+            DeleteUserInfo,
+            SuspendUserInfo
 
         }
         #endregion
