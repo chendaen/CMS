@@ -72,7 +72,7 @@ namespace CMS.WebUI.Controllers
             {
                 return View(model);
             }
-            
+
             //判断用户状态是否启用，注意是通过用户名检索的，重名用户应该不能注册
             if (!UserIsUsed(model.UserName))
             {
@@ -87,7 +87,7 @@ namespace CMS.WebUI.Controllers
             {
                 case SignInStatus.Success:
                     {                        
-                        return RedirectToLocal(returnUrl);
+                    return RedirectToLocal(returnUrl);
                     }                    
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -135,8 +135,6 @@ namespace CMS.WebUI.Controllers
                 {
                     user.Email = model.Email;
                 }
-                //else
-                //    user.Email = "user@CMS";
                 if (!string.IsNullOrEmpty(model.UserState.ToString()))
                 {
                     user.UserState = model.UserState;
