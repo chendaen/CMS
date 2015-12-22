@@ -16,6 +16,9 @@
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Address)
         </th>
         <th>
@@ -57,15 +60,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.AccessFailedCount)
             </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
-        </th>
         <th></th>
     </tr>
 
     @foreach (var item in Model)
     {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
@@ -108,9 +111,6 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.AccessFailedCount)
                 </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
             <td>
                 @Html.ActionLink("编辑", "UserEdit", new { UserName = item.UserName }) |
                 @Html.ActionLink("重置密码", "ResetPassword", new { ID = item.Id }) |

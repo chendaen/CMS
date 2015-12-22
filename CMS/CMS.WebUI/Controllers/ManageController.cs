@@ -92,6 +92,11 @@ namespace CMS.WebUI.Controllers
             {
                 return View(model);
             }
+            if (model.OldPassword.Equals(model.NewPassword))
+            {
+                ModelState.AddModelError(string.Empty, "新密码不能和原密码一致");
+                return View(model);
+            }
             var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
