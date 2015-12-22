@@ -8,7 +8,11 @@ using System.ComponentModel.DataAnnotations;
 namespace CMS.WebUI.Models
 {
     public class ApplicationUser : IdentityUser
-    {
+    {        
+
+        [Display(Name ="用户名")]
+        public override string UserName { get; set; }
+
         /// <summary>
         /// 住址
         /// </summary>

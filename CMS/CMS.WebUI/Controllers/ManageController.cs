@@ -216,11 +216,11 @@ namespace CMS.WebUI.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UserCreate(RegisterViewModel model)
+        public async Task<ActionResult> UserCreate([Bind(Exclude = "age,Email")]RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.UserName };
 
                 if (!string.IsNullOrEmpty(model.Address))
                 {
@@ -230,9 +230,13 @@ namespace CMS.WebUI.Controllers
                 {
                     user.Age = model.Age;
                 }
-                if (!string.IsNullOrEmpty(model.City.ToString()))
+                if (!string.IsNullOrEmpty(model.City))
                 {
                     user.City = model.City;
+                }
+                if (!string.IsNullOrEmpty(model.Email))
+                {
+                    user.Email = model.Email;
                 }
                 if (!string.IsNullOrEmpty(model.UserState.ToString()))
                 {
