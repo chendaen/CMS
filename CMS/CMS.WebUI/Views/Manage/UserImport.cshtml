@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "UserImport";
+    Layout = "~/Views/Shared/_LayoutUserManage.cshtml";
+}
+
+<h2>导入用户</h2>
+
+@using (Html.BeginForm("UserImport", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <h4>用户信息</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <input type="file" name="file" />
+    <input type="submit" value="提交" />
+}
+
+<div>
+    @Html.ActionLink("返回到用户列表", "UserList")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

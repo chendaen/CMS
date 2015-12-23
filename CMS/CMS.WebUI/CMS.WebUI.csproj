@@ -238,6 +238,7 @@
     <Content Include="Views\Manage\ResetPassword.cshtml" />
     <Content Include="Views\Manage\UserDelete.cshtml" />
     <Content Include="Views\Manage\UserSuspend.cshtml" />
+    <Content Include="Views\Manage\UserImport.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
