@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Create";
+}
+<h2>创建角色</h2>
+@Html.ActionLink("角色列表", "Index") | @Html.ActionLink("管理用户角色", "ManageUserRoles")
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div>
+        角色名
+    </div>
+    <p>
+        @Html.TextBox("RoleName")
+    </p>
+    <input type="submit" value="保存" />
+}
+
