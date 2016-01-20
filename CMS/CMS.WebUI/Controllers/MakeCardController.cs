@@ -15,7 +15,7 @@ using System.IO;
 
 namespace CMS.WebUI.Controllers
 {
-    [Authorize(Users = "Admin")]
+    [Authorize(Roles ="制卡员")]
     public class MakeCardController : Controller
     {
         private ApplicationSignInManager _signInManager;
