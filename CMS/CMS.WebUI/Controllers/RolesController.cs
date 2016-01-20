@@ -11,6 +11,7 @@ using Microsoft.Owin.Security;
 
 namespace CMS.WebUI.Controllers
 {
+    [Authorize]
     public class RolesController : Controller
     {
         ApplicationDbContext context = new ApplicationDbContext();
