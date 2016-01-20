@@ -11,7 +11,10 @@ using System.Data;
 using System.Data.OleDb;
 using System.Xml;
 using System.IO;
-
+using System.IO.Packaging;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.Collections.Generic;
 
 namespace CMS.WebUI.Controllers
 {
@@ -390,102 +393,113 @@ namespace CMS.WebUI.Controllers
             return View(model);
         }
 
+        public static String GetValue(Cell cell, SharedStringTablePart stringTablePart)
+        {
+            if (cell.ChildElements.Count == 0)
+                return null;
+
+            //get cell value
+            String value = cell.CellValue.InnerText;
+
+            //Look up real value from shared string table
+            if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                value = stringTablePart.SharedStringTable
+                .ChildElements[Int32.Parse(value)]
+                .InnerText;
+
+            return value;
+        }
+
         [HttpPost]
         public async Task<ActionResult> UserImport(HttpPostedFileBase file)
         {
-            DataSet ds = new DataSet();
-            if (Request.Files["file"].ContentLength > 0)
+            const int blockSize = 256;
+            int bytesNum;
+            byte[] buffer = new byte[blockSize];
+            MemoryStream ms = new MemoryStream();
+
+            while ((bytesNum = file.InputStream.Read(buffer, 0, blockSize)) > 0)
+                ms.Write(buffer, 0, bytesNum);
+
+            Stream stream = ms;
+
+            Package sp = Package.Open(stream, FileMode.Open, FileAccess.ReadWrite);
+            SpreadsheetDocument spDoc = SpreadsheetDocument.Open(sp);
+
+            WorkbookPart wbPart = spDoc.WorkbookPart;
+
+            Sheet theSheet = wbPart.Workbook.Descendants<Sheet>().Where(s => s.Name == "Sheet1").FirstOrDefault();
+
+            if(theSheet == null)
             {
-                string fileExtension = System.IO.Path.GetExtension(Request.Files["file"].FileName);
+                throw new ArgumentException("SheetName");
+            }
 
-                if (fileExtension == ".xls" || fileExtension == ".xlsx")
+            SharedStringTablePart tablePart = wbPart.SharedStringTablePart;
+                        
+            WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(theSheet.Id));
+
+            IEnumerable<Row> rows = wsPart.Worksheet.Descendants<Row>();
+            String[] cellHeaders = null;
+
+            var user = new ApplicationUser { };
+            var result = new IdentityResult { };
+            int i = 0;
+
+            foreach (Row row in rows)
+            {
+                if (row.RowIndex == 1)
+                    cellHeaders = new String[row.Count()];
+                else
+                    user = new ApplicationUser { };
+
+                foreach (Cell cell in row)
                 {
-                    string fileLocation = Server.MapPath("~/Content/") + Path.GetFileName(Request.Files["file"].FileName);
-                    if (System.IO.File.Exists(fileLocation))
+                    if (row.RowIndex == 1)
+                        cellHeaders[i] = GetValue(cell, tablePart);
+                    else
                     {
-
-                        System.IO.File.Delete(fileLocation);
+                        switch (cellHeaders[i])
+                        {
+                            case "用户名":
+                                user.UserName = GetValue(cell, tablePart);
+                                break;
+                            case "地址":
+                                user.Address = GetValue(cell, tablePart);
+                                break;
+                            case "城市":
+                                user.City = GetValue(cell, tablePart);
+                                break;
+                            case "Email":
+                                user.Email = GetValue(cell, tablePart);
+                                break;
+                            case "年龄":
+                                user.Age = Int32.Parse(GetValue(cell, tablePart));
+                                break;
+                            case "用户状态":
+                                user.UserState = Int32.Parse(GetValue(cell, tablePart));
+                                break;
+                        }
                     }
-                    Request.Files["file"].SaveAs(fileLocation);
-                    string excelConnectionString = string.Empty;
-                    excelConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileLocation + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
-                    //connection String for xls file format.
-                    if (fileExtension == ".xls")
-                    {
-                        excelConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileLocation + ";Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=2\"";
-                    }
-                    //connection String for xlsx file format.
-                    else if (fileExtension == ".xlsx")
-                    {
-
-                        excelConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileLocation + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
-                    }
-                    //Create Connection to Excel work book and add oledb namespace
-                    OleDbConnection excelConnection = new OleDbConnection(excelConnectionString);
-                    excelConnection.Open();
-                    DataTable dt = new DataTable();
-
-                    dt = excelConnection.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                    if (dt == null)
-                    {
-                        return null;
-                    }
-
-                    String[] excelSheets = new String[dt.Rows.Count];
-                    int t = 0;
-                    //excel data saves in temp file here.
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        excelSheets[t] = row["TABLE_NAME"].ToString();
-                        t++;
-                    }
-                    OleDbConnection excelConnection1 = new OleDbConnection(excelConnectionString);
-
-
-                    string query = string.Format("Select * from [{0}]", excelSheets[0]);
-                    using (OleDbDataAdapter dataAdapter = new OleDbDataAdapter(query, excelConnection1))
-                    {
-                        dataAdapter.Fill(ds);
-                    }
+                    i++;
                 }
-                if (fileExtension.ToString().ToLower().Equals(".xml"))
+                i = 0;
+                if (row.RowIndex > 1)
                 {
-                    string fileLocation = Server.MapPath("~/Content/") + Request.Files["FileUpload"].FileName;
-                    if (System.IO.File.Exists(fileLocation))
-                    {
-                        System.IO.File.Delete(fileLocation);
-                    }
-
-                    Request.Files["FileUpload"].SaveAs(fileLocation);
-                    XmlTextReader xmlreader = new XmlTextReader(fileLocation);
-                    // DataSet ds = new DataSet();
-                    ds.ReadXml(xmlreader);
-                    xmlreader.Close();
-                }
-
-                bool bResult = false;
-                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
-                {
-
-                    var user = new ApplicationUser {  };
-
-                    user.UserName = ds.Tables[0].Rows[i][0].ToString();
-                    user.Address = ds.Tables[0].Rows[i][1].ToString();
-                    user.Age = Int32.Parse(ds.Tables[0].Rows[i][2].ToString());
-                    user.City = ds.Tables[0].Rows[i][3].ToString();
-                    user.Email = ds.Tables[0].Rows[i][4].ToString();
-                    user.UserState = Int32.Parse(ds.Tables[0].Rows[i][5].ToString());
-
-                    var result = await UserManager.CreateAsync(user, "Test@123");
-                    bResult = result.Succeeded;
-                }
-                if (bResult)
-                {
-                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                    return RedirectToAction("UserList", new { Message = ManageMessageId.CreateUserInfo });
+                    if(user.UserName != "null")
+                        result = await UserManager.CreateAsync(user, "Test@123");                   
                 }
             }
+
+            bool bResult = result.Succeeded;
+
+            if (bResult)
+            {
+                //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                return RedirectToAction("UserList", new { Message = ManageMessageId.CreateUserInfo });
+            }
+
             return View();
         }
 
