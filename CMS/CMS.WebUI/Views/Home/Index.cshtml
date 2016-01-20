@@ -5,7 +5,8 @@
 <div class="jumbotron">
     <h1>金融交易</h1>
     <p class="lead">金融交易模块说明.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">金融交易</a></p>
+    @*<p><a href="http://asp.net" class="btn btn-primary btn-lg">金融交易</a></p>*@
+    <p>@Html.ActionLink("金融管理", "Index", "Business", new { area = "" }, new { @class = "btn btn-primary btn-lg" })</p>
 </div>
 
 <div class="row">
@@ -21,7 +22,7 @@
     </div>
     <div class="col-md-4">
         <h2>制卡中心</h2>
-        <p>    制卡中心模块说明.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">制卡中心</a></p>
+        <p>    制卡中心模块说明【目前只能用Admin登陆】.</p>
+        <p>@Html.ActionLink("制卡管理", "UserList", "MakeCard", new { area = "" }, new { @class = "btn btn-default" })</p>
     </div>
 </div>

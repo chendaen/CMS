@@ -1,0 +1,38 @@
+﻿@model IEnumerable<CMS.WebUI.Models.UserCardViewModel>
+
+@{
+    ViewBag.Title = "BindCardList";
+    Layout = "~/Views/Shared/_LayoutMakeCard.cshtml";
+}
+
+<h2>BindCardList</h2>
+
+<p>
+   用户： @ViewBag.UserName
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CardNo)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CardNo)
+        </td>
+        <td>
+            @*@Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |*@
+            @Html.ActionLink("解绑", "UnBundCard", new { ID=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
+<div>
+    @Html.ActionLink("返回到用户列表", "UserList")
+</div>

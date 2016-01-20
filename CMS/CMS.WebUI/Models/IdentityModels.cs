@@ -61,5 +61,7 @@ namespace CMS.WebUI.Models
         }
 
         public System.Data.Entity.DbSet<CMS.WebUI.Models.UserStates> DbUserStates { get; set; }
+
+        public System.Data.Entity.DbSet<CMS.WebUI.Models.UserCardViewModel> DbUserCard { get; set; }
     }
 }
