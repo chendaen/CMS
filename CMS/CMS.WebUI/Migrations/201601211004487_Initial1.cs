@@ -8,12 +8,12 @@ namespace CMS.WebUI.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.UserCardViewModels",
+                "dbo.CardBalanceViewModels",
                 c => new
                     {
-                        ID = c.String(nullable: false, maxLength: 128),
-                        UserID = c.String(nullable: false),
+                        ID = c.Int(nullable: false, identity: true),
                         CardNo = c.String(nullable: false),
+                        Balance = c.Double(nullable: false),
                     })
                 .PrimaryKey(t => t.ID);
             
@@ -21,7 +21,7 @@ namespace CMS.WebUI.Migrations
         
         public override void Down()
         {
-            DropTable("dbo.UserCardViewModels");
+            DropTable("dbo.CardBalanceViewModels");
         }
     }
 }

@@ -1,5 +1,64 @@
-﻿
+﻿@model IEnumerable<CMS.WebUI.Models.ApplicationUser>
+
 @{
+    Layout = "~/Views/Shared/_LayoutBusiness.cshtml";
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>用户列表</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Age)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.City)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>       
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>           
+            <td>
+                @Html.ActionLink("关联卡列表", "CardList", new { UserName = item.UserName })
+                @*@Html.ActionLink("读卡", "CardList", new { UserName = item.UserName }) |
+                @Html.ActionLink("解绑卡", "BindCardList", new { UserID = item.Id })*@
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+
+
+
+
+
+@*@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutBusiness.cshtml";
 }
@@ -18,10 +77,10 @@
         <div class="form-group">
             @Html.Label("卡号:", new { @class = "col-md-1" })
             <div class="col-md-3">
-                @Html.Editor("卡编号")
+                 @Html.Editor("卡编号")
             </div>
             <div class="col-md-1">
-                @Html.ActionLink("卡充值","CardList")
+                @Html.ActionLink("卡充值", "RechargeCard", "Business", new { CardNo= Html.Display("卡编号") }) 
             </div>
         </div>
 
@@ -34,4 +93,4 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-}
+}*@

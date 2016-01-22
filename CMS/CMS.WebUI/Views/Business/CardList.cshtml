@@ -1,0 +1,101 @@
+﻿@model IEnumerable<CMS.WebUI.Models.UserCardViewModel>
+
+@{
+    ViewBag.Title = "CardList";
+    Layout = "~/Views/Shared/_LayoutBusiness.cshtml";
+}
+
+<h2>关联卡列表</h2>
+
+<p>
+    用户： @ViewBag.UserName
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CardNo)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CardNo)
+            </td>
+            <td>
+                @*@Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+                    @Html.ActionLink("Details", "Details", new { id=item.ID }) |*@
+                @Html.ActionLink("充值", "RechargeCard", new { CardNo = item.CardNo })
+            </td>
+        </tr>
+    }
+
+</table>
+<div>
+    @Html.ActionLink("返回到用户列表", "Index")
+</div>
+
+
+
+@*@model CMS.WebUI.Models.UserCardViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutMakeCard.cshtml";
+
+}
+
+@{
+    ViewBag.Title = "BindingCard";
+}
+
+<h2>绑定卡</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>卡信息</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+        @Html.HiddenFor(model => model.UserID)
+
+        <div class="form-group">
+            @Html.Label("用户名", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <label>@ViewBag.UserName</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("卡号", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CardNo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CardNo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="充值" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("返回到用户列表", "UserList")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}*@
+
+
+
+
