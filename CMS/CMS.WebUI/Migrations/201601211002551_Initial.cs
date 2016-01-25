@@ -5,9 +5,6 @@ namespace CMS.WebUI.Migrations
     
     public partial class Initial : DbMigration
     {
-        public  void zcf()
-        {
-        }
         public override void Up()
         {
             AddColumn("dbo.RechargeViewModels", "Operate", c => c.String(nullable: false));
