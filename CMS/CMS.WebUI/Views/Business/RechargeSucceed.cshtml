@@ -1,0 +1,81 @@
+﻿@model CMS.WebUI.Models.RechargeEx
+@{
+    ViewBag.Title = "RechargeSucceed";
+    Layout = "~/Views/Shared/_LayoutBusiness.cshtml";
+}
+
+<h2>充值成功</h2>
+
+<div class="form-horizontal">
+    <hr />
+    <div class="form-group">
+        <div class="col-md-1">
+            @Html.DisplayNameFor(model => model.CardNo) 
+        </div>
+        @*@Html.LabelFor(model => model.CardNo, htmlAttributes: new { @class = "control-label col-md-2" })*@
+        <div class="col-md-11">
+            @Html.DisplayFor(model => model.CardNo, new { htmlAttributes = new { @class = "form-control" } })            
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-1">
+            @Html.DisplayNameFor(model => model.Balance)
+        </div>  
+        @*@Html.LabelFor(model => model.Balance, htmlAttributes: new { @class = "control-label col-md-2" })*@
+        <div class="col-md-11">
+            @Html.DisplayFor(model => model.Balance, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+    <hr />
+</div>
+
+
+@*<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CardNo)
+            @Html.DisplayFor(model=>model.CardNo)
+        </th>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.Balance)
+            @Html.DisplayFor(model => model.Balance)
+        </th>
+    </tr>
+    <tr>
+        
+    </tr>
+</table>*@
+
+@*@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CardNo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CardNo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CardNo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Balance, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Balance, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Balance, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <hr />
+
+    </div>
+}*@
+
+<div>
+    @Html.ActionLink("返回到用户列表", "Index")
+</div>
